@@ -1,0 +1,141 @@
+﻿@*@model List<DevExtreme.Models.Employee>*@
+@{
+    ViewData["Title"] = "Index";
+}
+
+@*<h1>@Model[0].Name</h1>*@
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.2.17/css/dx.light.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.2.17/css/dx.common.css" />
+<!-- or a local script -->
+
+
+<body>
+    <div id="grid"></div>
+</body>
+@section Scripts{
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.2/FileSaver.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn3.devexpress.com/jslib/17.2.17/js/dx.all.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/devextreme-aspnet-data@2.5.0/js/dx.aspnet.data.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.4.0/polyfill.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.1.1/exceljs.min.js"></script>
+    <script>
+        $.ajax({
+            type: "GET",
+            url: "/home/getEmployees",
+            data: '{}',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (res) {
+                ;
+                $('#grid').dxDataGrid({
+                    dataSource: res.data,
+                    keyExpr: 'id',
+                    remoteOperations: true,
+                    export: {
+                        enabled: true,
+                        allowExportSelectedData: true,
+                        fileName: 'id',
+                    },
+
+                    columns: [
+
+                        {
+                            dataField: 'id',
+                            // width: '0%',
+                            allowSorting: true,
+                            allowExporting: true,
+                            caption: 'Id',
+                            visible: false
+
+
+                        },
+                        {
+                            dataField: 'name',
+                            //  width: '10%',
+                            allowSorting: true,
+                            allowExporting: true,
+                            caption: 'Name',
+
+                        },
+                        {
+                            dataField: 'city',
+                            //  width: '10%',
+                            allowSorting: true,
+                            allowExporting: true,
+                            caption: 'City',
+
+                        }
+
+
+
+                        ,
+
+                        {
+                            dataField: 'age',
+                            dataType: 'datetime',
+                            format: 'EEEE, d of MMM, yyyy HH:mm',
+                            allowExporting: true,
+                            //width: '10%',
+                            allowSorting: true,
+                            editorOptions: { type: "datetime" },
+                            caption: 'Enrollment Date'
+                        },
+
+
+                        {
+                            dataField: "Delete",
+                            width: '10%',
+                            cellTemplate: function (element, info) {
+                                element.append(`<a class="btn btn-primary" href="/Inpatients/Delete?id=` + info.data.inpatiantId + `"> Delete </a>`)
+                                    .css("color", "blue");
+                            }
+                        },
+                        {
+                            dataField: "Print",
+                            width: '10%',
+                            cellTemplate: function (element, info) {
+                                element.append(`<a class="btn btn-primary" href="/inpatient/Inpatients/Print?id=` + info.data.inpatiantId + `"> Print </a>`)
+                                    .css("color", "blue");
+                            }
+                        }
+                    ],
+
+
+
+
+
+
+
+                    filterRow: {
+                        visible: true,
+                    },
+                    columnHidingEnabled: true,
+                    headerFilter: {
+                        visible: true,
+                    },
+                    groupPanel: {
+                        visible: true,
+                    },
+                    paging: {
+                        pageSize: 10,
+                    },
+                    pager: {
+                        showPageSizeSelector: true,
+                        allowedPageSizes: [10, 15],
+                    },
+                    //scrolling: {
+                    //    mode: 'virtual',
+                    //},
+                    /* height: 550,*/
+                    showBorders: true,
+
+                    hoverStateEnabled: true,
+                });
+            }
+        });
+    </script>
+
+}
